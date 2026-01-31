@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Love</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #ffe6f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid #ff66b2;
+        }
+        
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(to right, #ff66b2, #ff99cc, #ff66b2);
+        }
+        
+        h1 {
+            color: #ff3399;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .message {
+            font-size: 1.8rem;
+            color: #333;
+            margin: 30px 0;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            min-width: 180px;
+        }
+        
+        .yes-btn {
+            background-color: #ff66b2;
+            color: white;
+        }
+        
+        .yes-btn:hover {
+            background-color: #ff3385;
+            transform: scale(1.05);
+        }
+        
+        .no-btn {
+            background-color: #cccccc;
+            color: #666;
+        }
+        
+        .no-btn:hover {
+            background-color: #b3b3b3;
+            transform: scale(1.05);
+        }
+        
+        .special-message {
+            margin-top: 40px;
+            padding: 25px;
+            background: linear-gradient(135deg, #fff0f7, #ffe6f2);
+            border-radius: 15px;
+            border-left: 5px solid #ff66b2;
+            border-right: 5px solid #ff66b2;
+            display: none;
+            text-align: center;
+        }
+        
+        .special-text {
+            font-size: 1.3rem;
+            color: #d63384;
+            line-height: 1.8;
+            font-weight: bold;
+        }
+        
+        .gallery-section {
+            display: none;
+            margin-top: 40px;
+            animation: fadeIn 1s ease;
+        }
+        
+        .gallery-title {
+            color: #ff3399;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .gallery-subtitle {
+            color: #ff66b2;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+        
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .photo-item {
+            border-radius: 15px;
+            overflow: hidden;
+            height: 170px;
+            border: 3px solid #ff99cc;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .photo-item:hover {
+            transform: scale(1.05);
+            border-color: #ff3399;
+            box-shadow: 0 8px 20px rgba(255, 51, 153, 0.3);
+        }
+        
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ffccdd, #ff99cc);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #ff3399;
+            font-size: 3rem;
+            position: relative;
+        }
+        
+        .date-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 51, 153, 0.9);
+            color: white;
+            padding: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .date-number {
+            font-size: 1rem;
+            margin-top: 10px;
+            color: #d63384;
+            font-weight: bold;
+        }
+        
+        .memories-section {
+            margin-top: 40px;
+            display: none;
+            animation: fadeIn 1s ease;
+        }
+        
+        .memories-title {
+            color: #ff3399;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .memory-item {
+            background: linear-gradient(135deg, #fff0f7, #ffe6f2);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border-left: 5px solid #ff66b2;
+            text-align: left;
+            display: none;
+        }
+        
+        .memory-item.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .memory-date {
+            color: #ff3399;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .memory-text {
+            color: #d63384;
+            line-height: 1.6;
+        }
+        
+        .heart {
+            color: #ff66b2;
+            font-size: 1.8rem;
+            margin: 0 5px;
+            display: inline-block;
+            animation: heartbeat 1.5s infinite;
+        }
+        
+        .for-you-title {
+            color: #ff3399;
+            font-size: 2.5rem;
+            margin: 30px 0 20px 0;
+            font-weight: bold;
+            display: none;
+        }
+        
+        .love-note {
+            font-size: 1.5rem;
+            color: #ff66b2;
+            margin-bottom: 30px;
+            display: none;
+            font-style: italic;
+        }
+        
+        .click-continue {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fff0f7;
+            border-radius: 15px;
+            border: 2px dashed #ff66b2;
+            display: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .click-continue:hover {
+            background-color: #ffccdd;
+            transform: scale(1.02);
+        }
+        
+        .click-text {
+            font-size: 1.5rem;
+            color: #ff3399;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .click-subtext {
+            font-size: 1.1rem;
+            color: #ff66b2;
+            font-style: italic;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            background-color: #ff99cc;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+        
+        .nav-btn:hover {
+            background-color: #ff66b2;
+            transform: scale(1.05);
+        }
+        
+        .try-again {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #666;
+            font-style: italic;
+            display: none;
+        }
+        
+        .anniversary {
+            color: #ff3399;
+            font-size: 2.2rem;
+            margin: 20px 0;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(255, 102, 178, 0.3);
+        }
+        
+        .date-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .date-btn {
+            padding: 10px 20px;
+            background-color: #ff99cc;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .date-btn:hover {
+            background-color: #ff66b2;
+        }
+        
+        .date-btn.active {
+            background-color: #ff3399;
+            transform: scale(1.05);
+        }
+        
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .click-arrow {
+            font-size: 2rem;
+            margin-top: 10px;
+            animation: bounce 1.5s infinite;
+        }
+        
+        @media (max-width: 600px) {
+            .card {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .message {
+                font-size: 1.5rem;
+            }
+            
+            button {
+                padding: 12px 30px;
+                font-size: 1.3rem;
+                min-width: 150px;
+            }
+            
+            .special-text {
+                font-size: 1.1rem;
+            }
+            
+            .anniversary, .gallery-title, .memories-title, .for-you-title {
+                font-size: 1.8rem;
+            }
+            
+            .photo-gallery {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .photo-item {
+                height: 160px;
+            }
+            
+            .nav-btn {
+                padding: 10px 20px;
+                font-size: 1rem;
+                min-width: 130px;
+            }
+            
+            .date-btn {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>မမခင်ဗျား♥️</h1>
+        
+        <div class="message" id="question">Do you love me?🥺</div>
+        
+        <div class="options">
+            <button class="yes-btn" id="yesBtn">YES</button>
+            <button class="no-btn" id="noBtn">NO</button>
+        </div>
+        
+        <!-- Anniversary Message -->
+        <div class="special-message" id="specialMessage">
+            <div class="anniversary">🎉 Happy one monthsary pr naw achitkalay😘 🎉</div>
+            <div class="special-text">
+                "ချစ်သောနဲ့အခုဆို 1လတောင်ပြည့်ခဲ့ပြီနော်<br>
+                အခုကစ နောက် လပေါင်းများစွာ<br>
+                ရက်ပေါင်းများစွာအထိ<br>
+                ကျနော်နဲ့တူတူကောင်းတူဆိုးအတူ<br>
+                ရှေ့ဆက်ရအောင်နော်<br>
+                အရမ်းချစ်တယ်မမ<span class="heart">♥️</span>"
+            </div>
+            
+            <!-- Click to Continue -->
+            <div class="click-continue" id="clickContinue">
+                <div class="click-text">Click to Continue</div>
+                <div class="click-subtext">ကျနော့်ရဲ့အချစ်စာလွှာလေးကြည့်မလားခင်ဗျား🤪🥰</div>
+                <div class="click-arrow">👇</div>
+            </div>
+        </div>
+        
+        <!-- These are for you section -->
+        <div class="for-you-title" id="forYouTitle"></div>
+        <div class="love-note" id="loveNote">မမ ကြိုက်တယ်မလားဗျာ🥺<span class="heart">❤</span></div>
+        
+        <!-- Gallery Section -->
+        <div class="gallery-section" id="gallerySection">
+            <div class="gallery-title">Our Special Dates</div>
+            <div class="gallery-subtitle">Moments we'll cherish forever</div>
+            
+            <div class="photo-gallery" id="photoGallery">
+                <!-- First Date -->
+                <div class="photo-item" data-date="first">
+                    <div class="photo-placeholder">
+                        💕
+                        <div class="date-label">First Date</div>
+                    </div>
+                </div>
+                
+                <!-- Second Date -->
+                <div class="photo-item" data-date="second">
+                    <div class="photo-placeholder">
+                        🌟
+                        <div class="date-label">Second Date</div>
+                    </div>
+                </div>
+                
+                <!-- Third Date -->
+                <div class="photo-item" data-date="third">
+                    <div class="photo-placeholder">
+                        ✨
+                        <div class="date-label">Third Date</div>
+                    </div>
+                </div>
+                
+                <!-- Fourth Date -->
+                <div class="photo-item" data-date="fourth">
+                    <div class="photo-placeholder">
+                        😊
+                        <div class="date-label">Fourth Date</div>
+                    
+                    </div>
+                </div>
+                
+                <!-- Fifth Date -->
+                <div class="photo-item" data-date="fifth">
+                    <div class="photo-placeholder">
+                        🥰
+                        <div class="date-label">Fifth Date</div>
+                        
+                    </div>
+                </div>
+                
+                
+            </div>
+            
+            <div class="navigation">
+                <button class="nav-btn" id="nextBtn">View Memories →</button>
+            </div>
+        </div>
+        
+        <!-- Memories Section -->
+        <div class="memories-section" id="memoriesSection">
+            <div class="memories-title">Our Date Memories</div>
+            
+            <!-- Date Navigation Buttons -->
+            <div class="date-navigation" id="dateNavigation">
+                <button class="date-btn active" data-date="first">💖First Date💖</button>
+                <button class="date-btn" data-date="second">💖Second Date💖</button>
+                <button class="date-btn" data-date="third">💖Third Date💖</button>
+                <button class="date-btn" data-date="fourth">💖Fourth Date💖</button>
+                <button class="date-btn" data-date="fifth">💖Fifth Date💖</button>
+                
+            </div>
+            
+            <!-- First Date Memory -->
+            <div class="memory-item active" id="firstMemory">
+                <div class="memory-date">💖First Date💖 </div>
+                <img src="1.jpg" alt="First Date Photo" style="width:100%; border-radius:10px; margin-bottom:10px;">
+                <div class="memory-text">First dateတဲ့ အဲနေ့လေးကတကယ်အမှတ်ရစရာပါပဲဗျာ ကျနော့်မှာပထမဆုံး မမ လက်လေးကိုင်ခွင့်ရတဲ့နေ့ တကယ်‌မေ့နိုင်မယ်မထင်ပါဘူး ဆောင်းအငွေ့သက်လေးနဲ့တကယ် မမ ကိုဖက်ခွင့်ရော လက်ဖဝါးနုနုလေးရောကိုင်ခွင့်ရခဲ့တဲ့နေ့ပါပဲဗျာ</div>
+            </div>
+            
+            <!-- Second Date Memory -->
+            <div class="memory-item" id="secondMemory">
+                <div class="memory-date">🌟Second Date🌟 </div>
+                <img src="2.jpg" alt="Second Date Photo" style="width:100%; border-radius:10px; margin-bottom:10px;">
+                <div class="memory-text">Sec dateကျတော့ ရည်းစားဖြစ်ပြီးကန်တင်းမှာပထမဆုံးတွေ့တဲ့နေ့လေး အဲနေ့လေးကလည်း နှစ်ယောက်သားရှက်နေသေးတာ မမ ပါးမို့မို့လေးက တကယ် ကိုင်မဝခဲ့ပါဘူးဗျာ အဲနေ့ကမမ မချစ်သေးမှန်းသိပေမဲ့လည်း ကျနော်အချစ်ပိုခဲ့တဲ့တရက်ပဲဆိုပါတော့</div>
+            </div>
+            
+            <!-- Third Date Memory -->
+            <div class="memory-item" id="thirdMemory">
+                <div class="memory-date">✨Third Date✨ </div>
+                <img src="3.jpg" alt="Third Date Photo" style="width:100%; border-radius:10px; margin-bottom:10px;">
+                <div class="memory-text">Third date မှာတော့ public viewမှာ မမ ပါးလေးကိုနမ်းခွင့်ရတဲ့နေ့ တကယ့်အမှတ်တရနေ့မို့ မမ သနပ်ခါးလိမ်းထားတဲ့မျက်နှာလေးကို အခုထိအမှတ်ရတုန်းပါပဲဗျာ</div>
+            </div>
+            
+            <!-- Fourth Date Memory -->
+            <div class="memory-item" id="fourthMemory">
+                <div class="memory-date">😊Fourth Date😊</div>
+                <img src="4.jpg" alt="Fourth Date Photo" style="width:100%; border-radius:10px; margin-bottom:10px;">
+                <div class="memory-text">Fourth date ကအထွေအထူးမရှိပေမဲ့ အမြဲတမ်း အချစ်ပိုလာနေတဲ့ကျနော့်အတွက်တော့ မမ ပခုံးလေးကိုနမ်းပြီး‌လက်နုနုလေးကိုကိုင်ထားခွင့်ရဝာာကိုက ကံကောင်းခြငိးတခုပါပဲခင်ဗျား</div>
+            </div>
+            
+            <!-- Fifth Date Memory -->
+            <div class="memory-item" id="fifthMemory">
+                <div class="memory-date">🥰Fifth Date🥰 </div>
+                <img src="5.jpg" alt="Fifth Date Photo" style="width:100%; border-radius:10px; margin-bottom:10px;">
+                <div class="memory-text">Fifth dateကျတော့တမျိုးလေး မမ uniformနဲ့ ကျနော်ကလည်းပြာပြာသလဲလဲနဲ့welcomeကနေပြီးတန်းပြေးလာတဲ့ဖရိုဖရဲပုံလေးနဲ့ပေါ့ဗျာuniformလေးနဲ့ တကယ်ချစ်မဝ ကြည့်မဝခဲ့ပါဘူး အရမ်းချစ်တယ်မမခင်ဗျား 😭</div>
+            </div>
+            
+            
+            
+            <div class="navigation">
+                <button class="nav-btn" id="backBtn">← Back to Dates</button>
+                <button class="nav-btn" id="homeBtn">Back to Start</button>
+            </div>
+        </div>
+        
+        <div class="try-again" id="tryAgain">TRY AGAIN</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const question = document.getElementById('question');
+            const yesBtn = document.getElementById('yesBtn');
+            const noBtn = document.getElementById('noBtn');
+            const specialMessage = document.getElementById('specialMessage');
+            const clickContinue = document.getElementById('clickContinue');
+            const forYouTitle = document.getElementById('forYouTitle');
+            const loveNote = document.getElementById('loveNote');
+            const gallerySection = document.getElementById('gallerySection');
+            const memoriesSection = document.getElementById('memoriesSection');
+            const nextBtn = document.getElementById('nextBtn');
+            const backBtn = document.getElementById('backBtn');
+            const homeBtn = document.getElementById('homeBtn');
+            const tryAgain = document.getElementById('tryAgain');
+            const photoItems = document.querySelectorAll('.photo-item');
+            const dateBtns = document.querySelectorAll('.date-btn');
+            const memoryItems = document.querySelectorAll('.memory-item');
+            
+            let currentStep = 0;
+            const steps = [
+                { 
+                    question: "ကျနော့်ကိုချစ်လား🥺❤️", 
+                    yesText: "YES", 
+                    noText: "NO",
+                    onYes: function() {
+                        currentStep = 1;
+                        updateQuestion();
+                    },
+                    onNo: function() {
+                        currentStep = 0;
+                        updateQuestion();
+                    }
+                },
+                { 
+                    question: "မမခင်ဗျား ကျနော့်ရဲ့အချစ်စာလွှာလေးကြည့်မလားခင်ဗျား🥺❤️", 
+                    yesText: "YES PLEASE", 
+                    noText: "NO THANKS",
+                    onYes: function() {
+                        currentStep = 2;
+                        updateQuestion();
+                    },
+                    onNo: function() {
+                        currentStep = 3;
+                        updateQuestion();
+                    }
+                },
+                { 
+                    question: "", 
+                    yesText: "", 
+                    noText: "",
+                    onYes: function() {},
+                    onNo: function() {},
+                    special: function() {
+                        // Show anniversary message
+                        question.style.display = 'none';
+                        document.querySelector('.options').style.display = 'none';
+                        specialMessage.style.display = 'block';
+                        
+                        // Show click to continue after 2 seconds
+                        setTimeout(function() {
+                            clickContinue.style.display = 'block';
+                            clickContinue.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                        }, 2000);
+                    }
+                },
+                { 
+                    question: "မမ အဲတာလေးမကြည့်ချင်ဘူးလားဟင်🥺", 
+                    yesText: "", 
+                    noText: "",
+                    onYes: function() {},
+                    onNo: function() {},
+                    special: function() {
+                        document.querySelector('.options').style.display = 'none';
+                        tryAgain.style.display = 'block';
+                        
+                        setTimeout(function() {
+                            currentStep = 1;
+                            updateQuestion();
+                            tryAgain.style.display = 'none';
+                            document.querySelector('.options').style.display = 'flex';
+                        }, 2000);
+                    }
+                }
+            ];
+            
+            function updateQuestion() {
+                const step = steps[currentStep];
+                
+                question.innerHTML = step.question;
+                yesBtn.textContent = step.yesText;
+                noBtn.textContent = step.noText;
+                
+                // Hide buttons if no text
+                if (!step.yesText) {
+                    yesBtn.style.display = 'none';
+                } else {
+                    yesBtn.style.display = 'block';
+                }
+                
+                if (!step.noText) {
+                    noBtn.style.display = 'none';
+                } else {
+                    noBtn.style.display = 'block';
+                }
+                
+                // Handle special steps
+                if (step.special) {
+                    step.special();
+                }
+                
+                // Reset all sections if needed
+                if (currentStep !== 2) {
+                    resetAllSections();
+                }
+            }
+            
+            function resetAllSections() {
+                specialMessage.style.display = 'none';
+                clickContinue.style.display = 'none';
+                forYouTitle.style.display = 'none';
+                loveNote.style.display = 'none';
+                gallerySection.style.display = 'none';
+                memoriesSection.style.display = 'none';
+                question.style.display = 'flex';
+            }
+            
+            // Function to show specific memory
+            function showMemory(dateType) {
+                // Hide all memories
+                memoryItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Show selected memory
+                const selectedMemory = document.getElementById(dateType + 'Memory');
+                if (selectedMemory) {
+                    selectedMemory.classList.add('active');
+                }
+                
+                // Update date navigation buttons
+                dateBtns.forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.getAttribute('data-date') === dateType) {
+                        btn.classList.add('active');
+                    }
+                });
+                
+                // Scroll to memories section if not already there
+                if (memoriesSection.style.display !== 'block') {
+                    gallerySection.style.display = 'none';
+                    memoriesSection.style.display = 'block';
+                    memoriesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                
+                // Scroll to the active memory
+                setTimeout(() => {
+                    const activeMemory = document.querySelector('.memory-item.active');
+                    if (activeMemory) {
+                        activeMemory.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, 300);
+            }
+            
+            // Click to continue event
+            clickContinue.addEventListener('click', function() {
+                // Hide anniversary message and click area
+                specialMessage.style.display = 'none';
+                clickContinue.style.display = 'none';
+                
+                // Show "These are for you" section
+                forYouTitle.style.display = 'block';
+                loveNote.style.display = 'block';
+                
+                // After 2 seconds, show gallery
+                setTimeout(function() {
+                    forYouTitle.style.display = 'none';
+                    loveNote.style.display = 'none';
+                    gallerySection.style.display = 'block';
+                    gallerySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 2000);
+            });
+            
+            // Photo items click events
+            photoItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const dateType = this.getAttribute('data-date');
+                    showMemory(dateType);
+                });
+                
+                // Add hover effect to show it's clickable
+                item.style.cursor = 'pointer';
+            });
+            
+            // Date navigation buttons click events
+            dateBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const dateType = this.getAttribute('data-date');
+                    showMemory(dateType);
+                });
+            });
+            
+            // Navigation button event listeners
+            nextBtn.addEventListener('click', function() {
+                gallerySection.style.display = 'none';
+                memoriesSection.style.display = 'block';
+                showMemory('first'); // Show first memory by default
+                memoriesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+            
+            backBtn.addEventListener('click', function() {
+                memoriesSection.style.display = 'none';
+                gallerySection.style.display = 'block';
+                gallerySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+            
+            homeBtn.addEventListener('click', function() {
+                currentStep = 0;
+                resetAllSections();
+                updateQuestion();
+                document.querySelector('.options').style.display = 'flex';
+            });
+            
+            // Set up button event listeners
+            yesBtn.addEventListener('click', function() {
+                if (currentStep < steps.length) {
+                    steps[currentStep].onYes();
+                }
+            });
+            
+            noBtn.addEventListener('click', function() {
+                if (currentStep < steps.length) {
+                    steps[currentStep].onNo();
+                }
+            });
+            
+            // Initial setup
+            updateQuestion();
+            
+            // Function to handle photo upload (placeholder for actual implementation)
+            function handlePhotoUpload(dateNumber) {
+                alert(`Would you like to upload a photo for ${dateNumber}?\n\nIn a real implementation, this would open a file upload dialog!`);
+            }
+        });
+    </script>
+</body>
+</html>
